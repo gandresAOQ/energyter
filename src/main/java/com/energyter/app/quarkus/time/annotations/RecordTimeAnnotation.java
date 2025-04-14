@@ -1,12 +1,14 @@
-package com.energyter.app.time.annotations;
+package com.energyter.app.quarkus.time.annotations;
 
 
+import javax.interceptor.InterceptorBinding;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.METHOD)
+@InterceptorBinding
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface RecordTimeAnnotation {
 }

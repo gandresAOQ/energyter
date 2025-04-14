@@ -1,6 +1,6 @@
-package com.energyter.app.time.impl;
+package com.energyter.app.aspectj.time.impl;
 
-import com.energyter.app.time.MeasureTime;
+import com.energyter.app.aspectj.time.MeasureTime;
 
 public class MeasureTimeImpl implements MeasureTime {
     @Override
