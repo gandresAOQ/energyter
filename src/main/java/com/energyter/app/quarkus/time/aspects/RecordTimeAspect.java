@@ -23,7 +23,7 @@ public class RecordTimeAspect {
         MeasureTime measureTime = new MeasureTimeImpl();
         String methodName = context.getMethod().getName();
 
-        LOGGER.info("Start time recording for method: {}", methodName);
+        LOGGER.debug("Start time recording for method: {}", methodName);
         System.out.print("Start time recording for method: " + methodName);
         long startTime = measureTime.getCurrentTimeInMillis();
         try {
@@ -31,7 +31,7 @@ public class RecordTimeAspect {
         } finally {
             long executionTime = startTime - measureTime.getCurrentTimeInMillis();
             System.out.print("Execution time for method: " + methodName + " - " + executionTime);
-            LOGGER.info("Execution time for method: {} - {}", methodName, executionTime);
+            LOGGER.debug("Execution time for method: {} - {}", methodName, executionTime);
         }
     }
 }
