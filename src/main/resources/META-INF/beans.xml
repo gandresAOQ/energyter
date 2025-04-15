@@ -7,5 +7,9 @@
     <interceptors>
         <class>com.energyter.app.quarkus.time.aspects.RecordTimeMultiAspect</class>
         <class>com.energyter.app.quarkus.time.aspects.RecordTimeUniAspect</class>
+        <class>com.energyter.app.quarkus.memory.aspects.RecordMemoryUniAspect</class>
+        <class>com.energyter.app.quarkus.memory.aspects.RecordMemoryMultiAspect</class>
+        <class>com.energyter.app.quarkus.cpu.ascpects.RecordCpuUsageUniAspect</class>
+        <class>com.energyter.app.quarkus.cpu.ascpects.RecordCpuUsageMultiAspect</class>
     </interceptors>
 </beans>
