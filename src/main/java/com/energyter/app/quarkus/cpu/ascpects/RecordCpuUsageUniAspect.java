@@ -35,11 +35,14 @@ public class RecordCpuUsageUniAspect {
             OperatingSystemMXBean osMXBean = ManagementFactory.getOperatingSystemMXBean();
             long startThreadCpuTime = threadMXBean.getCurrentThreadCpuTime();
             double startProcessCpuLoad = getProcessCpuLoad(osMXBean);
+            double startSystemCpuLoad = getSystemCpuLoad(osMXBean);
 
-            AtomicReference<Double> peakCpuLoad = new AtomicReference<>(startProcessCpuLoad);
+            AtomicReference<Double> peakProcessCpuLoad = new AtomicReference<>(startProcessCpuLoad);
+            AtomicReference<Double> peakSystemCpuLoad = new AtomicReference<>(startSystemCpuLoad);
+
             AtomicBoolean monitoring = new AtomicBoolean(false);
 
-            Thread monitorThread = createMonitorThread(osMXBean, peakCpuLoad, monitoring);
+            Thread monitorThread = createMonitorThread(osMXBean, peakProcessCpuLoad, peakSystemCpuLoad, monitoring);
 
             Uni<?> result = (Uni<?>) context.proceed();
 
@@ -58,29 +61,42 @@ public class RecordCpuUsageUniAspect {
 
                         long endThreadCpuTime = threadMXBean.getCurrentThreadCpuTime();
                         double endProcessCpuLoad = getProcessCpuLoad(osMXBean);
+                        double endSystemCpuLoad = getSystemCpuLoad(osMXBean);
 
                         long cpuTimeNanos = endThreadCpuTime - startThreadCpuTime;
                         double cpuTimeMs = cpuTimeNanos / 1_000_000.0;
 
-                        LOG.infof("Reactive CPU usage for %s.%s: Thread CPU time=%f ms, Process CPU load: start=%f, end=%f, peak=%f",
+                        LOG.infof("CPU usage for %s.%s:\n" +
+                                        "  - Thread CPU time: %f ms\n" +
+                                        "  - Process CPU load: start=%f%%, end=%f%%, peak=%f%%\n" +
+                                        "  - System CPU load: start=%f%%, end=%f%%, peak=%f%%",
                                 context.getTarget().getClass().getSimpleName(),
                                 context.getMethod().getName(),
                                 cpuTimeMs,
                                 startProcessCpuLoad * 100,
                                 endProcessCpuLoad * 100,
-                                peakCpuLoad.get().doubleValue() * 100);
+                                peakProcessCpuLoad.get() * 100,
+                                startSystemCpuLoad * 100,
+                                endSystemCpuLoad * 100,
+                                peakSystemCpuLoad.get() * 100);
                     });
         }
         return context.proceed();
     }
 
-    private Thread createMonitorThread(OperatingSystemMXBean osMXBean, AtomicReference<Double> peakCpuLoad, AtomicBoolean monitoring) {
+    private Thread createMonitorThread(OperatingSystemMXBean osMXBean, AtomicReference<Double> peakCpuLoad, AtomicReference<Double> peakSystemCpuLoad, AtomicBoolean monitoring) {
         Thread thread = new Thread(() -> {
             while (monitoring.get()) {
                 double currentLoad = getProcessCpuLoad(osMXBean);
+                double currentSystemLoad = getSystemCpuLoad(osMXBean);
                 double currentPeak = peakCpuLoad.get();
                 if (currentLoad > currentPeak) {
                     peakCpuLoad.compareAndSet(currentPeak, currentLoad);
+                }
+
+                double currentSystemPeak = peakSystemCpuLoad.get();
+                if (currentSystemLoad > currentSystemPeak) {
+                    peakSystemCpuLoad.compareAndSet(currentSystemPeak, currentSystemLoad);
                 }
 
                 try {
@@ -103,5 +119,21 @@ public class RecordCpuUsageUniAspect {
             return osMXBean.getSystemLoadAverage() / osMXBean.getAvailableProcessors();
         }
     }
+    private double getSystemCpuLoad(OperatingSystemMXBean osMXBean) {
+        try {
+            // Try using the com.sun.management API first
+            Method method = osMXBean.getClass().getMethod("getSystemCpuLoad");
+            double load = (double) method.invoke(osMXBean);
+            if (load >= 0) return load;
+
+            // If that returns negative value, fall back to system load average
+            return osMXBean.getSystemLoadAverage() / osMXBean.getAvailableProcessors();
+        } catch (Exception e) {
+            // Use getSystemLoadAverage as fallback
+            double loadAvg = osMXBean.getSystemLoadAverage();
+            return loadAvg >= 0 ? loadAvg / osMXBean.getAvailableProcessors() : 0;
+        }
+    }
+
 
 }
