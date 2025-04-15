@@ -1,7 +1,5 @@
 package com.energyter.app.quarkus.time.annotations;
 
-
-import javax.interceptor.Interceptor;
 import javax.interceptor.InterceptorBinding;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,7 +1,7 @@
 package com.energyter.app.quarkus.time.aspects;
 
-import com.energyter.app.aspectj.time.MeasureTime;
-import com.energyter.app.aspectj.time.impl.MeasureTimeImpl;
+import com.energyter.app.quarkus.time.MeasureTime;
+import com.energyter.app.quarkus.time.impl.MeasureTimeImpl;
 import com.energyter.app.quarkus.time.annotations.RecordTimeAnnotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
