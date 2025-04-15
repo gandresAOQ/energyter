@@ -68,8 +68,8 @@ public class RecordCpuUsageUniAspect {
 
                         LOG.infof("CPU usage for %s.%s:\n" +
                                         "  - Thread CPU time: %f ms\n" +
-                                        "  - Process CPU load: start=%f%%, end=%f%%, peak=%f%%\n" +
-                                        "  - System CPU load: start=%f%%, end=%f%%, peak=%f%%",
+                                        "  - Process CPU load: start=%f, end=%f, peak=%f \n" +
+                                        "  - System CPU load: start=%f, end=%f, peak=%f",
                                 context.getTarget().getClass().getSimpleName(),
                                 context.getMethod().getName(),
                                 cpuTimeMs,
