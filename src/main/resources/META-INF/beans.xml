@@ -5,6 +5,6 @@
        version="2.0" bean-discovery-mode="all">
 
     <interceptors>
-        <class>com.energyter.app.quarkus.time.annotations.RecordTimeAnnotation</class>
+        <class>com.energyter.app.quarkus.time.aspects.RecordTimeAspect</class>
     </interceptors>
 </beans>

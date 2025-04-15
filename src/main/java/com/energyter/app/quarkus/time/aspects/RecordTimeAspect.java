@@ -11,8 +11,8 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
-@RecordTimeAnnotation
 @Interceptor
+@RecordTimeAnnotation
 @Priority(Interceptor.Priority.APPLICATION)
 public class RecordTimeAspect {
 
