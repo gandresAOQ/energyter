@@ -62,7 +62,7 @@ public class RecordCpuUsageUniAspect {
                         long cpuTimeNanos = endThreadCpuTime - startThreadCpuTime;
                         double cpuTimeMs = cpuTimeNanos / 1_000_000.0;
 
-                        LOG.infof("Reactive CPU usage for %s.%s: Thread CPU time=%f ms, Process CPU load: start=%d, end=%d, peak=%d",
+                        LOG.infof("Reactive CPU usage for %s.%s: Thread CPU time=%f ms, Process CPU load: start=%f, end=%f, peak=%f",
                                 context.getTarget().getClass().getSimpleName(),
                                 context.getMethod().getName(),
                                 cpuTimeMs,
