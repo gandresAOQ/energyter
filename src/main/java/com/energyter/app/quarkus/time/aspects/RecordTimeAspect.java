@@ -26,12 +26,12 @@ public class RecordTimeAspect {
         LOGGER.debug("Start time recording for method: {}", methodName);
         System.out.print("Start time recording for method: " + methodName);
         long startTime = measureTime.getCurrentTimeInMillis();
-        LOGGER.debug("Start time: {}", startTime);
+        System.out.print("Start time: " + startTime);
         try {
             return context.proceed();
         } finally {
             long endTime = measureTime.getCurrentTimeInMillis();
-            LOGGER.debug("End time: {}", endTime);
+            System.out.print("End time: " + endTime);
             long executionTime = startTime - endTime;
             System.out.print("Execution time for method: " + methodName + " - " + executionTime);
             LOGGER.debug("Execution time for method: {} - {}", methodName, executionTime);
