@@ -93,6 +93,17 @@
       <version>2.0</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>io.smallrye.reactive</groupId>
+      <artifactId>smallrye-mutiny-vertx-web-client</artifactId>
+      <version>3.18.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.jboss.logging/jboss-logging -->
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
+      <version>3.6.1.Final</version>
+    </dependency>
   </dependencies>
 
   <build>
