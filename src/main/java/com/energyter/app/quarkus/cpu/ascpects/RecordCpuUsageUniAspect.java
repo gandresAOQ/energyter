@@ -68,7 +68,7 @@ public class RecordCpuUsageUniAspect {
                                 cpuTimeMs,
                                 startProcessCpuLoad * 100,
                                 endProcessCpuLoad * 100,
-                                peakCpuLoad.get() * 100);
+                                peakCpuLoad.get().doubleValue() * 100);
                     });
         }
         return context.proceed();
