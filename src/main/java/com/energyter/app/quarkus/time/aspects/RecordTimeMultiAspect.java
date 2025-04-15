@@ -1,6 +1,7 @@
 package com.energyter.app.quarkus.time.aspects;
 
-import com.energyter.app.quarkus.time.annotations.RecordTimeAnnotation;
+import com.energyter.app.quarkus.time.annotations.RecordTimeMultiAnnotation;
+import com.energyter.app.quarkus.time.annotations.RecordTimeUniAnnotation;
 import io.smallrye.mutiny.Multi;
 import org.jboss.logging.Logger;
 import javax.annotation.Priority;
@@ -9,7 +10,7 @@ import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
 @Interceptor
-@RecordTimeAnnotation
+@RecordTimeMultiAnnotation
 @Priority(Interceptor.Priority.APPLICATION)
 public class RecordTimeMultiAspect {
 

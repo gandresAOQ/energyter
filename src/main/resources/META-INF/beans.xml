@@ -5,6 +5,7 @@
        version="2.0" bean-discovery-mode="all">
 
     <interceptors>
-        <class>com.energyter.app.quarkus.time.aspects.RecordTimeAspect</class>
+        <class>com.energyter.app.quarkus.time.aspects.RecordTimeMultiAspect</class>
+        <class>com.energyter.app.quarkus.time.aspects.RecordTimeUniAspect</class>
     </interceptors>
 </beans>
