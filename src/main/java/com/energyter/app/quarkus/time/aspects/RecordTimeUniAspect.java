@@ -1,6 +1,6 @@
 package com.energyter.app.quarkus.time.aspects;
 
-import com.energyter.app.quarkus.time.annotations.RecordTimeAnnotation;
+import com.energyter.app.quarkus.time.annotations.RecordTimeUniAnnotation;
 import io.smallrye.mutiny.Uni;
 import org.jboss.logging.Logger;
 import javax.annotation.Priority;
@@ -9,7 +9,7 @@ import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
 @Interceptor
-@RecordTimeAnnotation
+@RecordTimeUniAnnotation
 @Priority(Interceptor.Priority.APPLICATION)
 public class RecordTimeUniAspect {
 
