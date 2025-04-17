@@ -5,8 +5,11 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
+import com.energyter.app.mongodb.services.InsertOneDocument;
+import com.energyter.app.mongodb.services.impl.InsertOneDocumentImpl;
 import com.energyter.app.quarkus.memory.annotations.RecordMemoryUniAnnotation;
 import io.smallrye.mutiny.Uni;
+import org.bson.Document;
 import org.jboss.logging.Logger;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,6 +34,7 @@ public class RecordMemoryUniAspect {
             Thread monitorThread = createMonitorThread(runtime, peakMemory, monitoring);
 
             Uni<?> result = (Uni<?>) context.proceed();
+            InsertOneDocument insertOneDocument = new InsertOneDocumentImpl();
 
             return result
                     .onSubscription().invoke(() -> {
@@ -52,6 +56,14 @@ public class RecordMemoryUniAspect {
                                 finalUsed,
                                 peakMemory.get(),
                                 finalUsed - initialUsed);
+                        insertOneDocument.insertOne(new Document()
+                                .append("class", context.getTarget().getClass().getSimpleName())
+                                .append("method", context.getMethod().getName())
+                                .append("measure", "memory")
+                                .append("initial", initialUsed)
+                                .append("final", finalUsed)
+                                .append("peak", peakMemory.get())
+                                .append("delta", finalUsed - initialUsed));
                     });
         }
         return context.proceed();
