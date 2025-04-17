@@ -1,9 +1,12 @@
 package com.energyter.app.quarkus.cpu.ascpects;
 
 
+import com.energyter.app.mongodb.services.InsertOneDocument;
+import com.energyter.app.mongodb.services.impl.InsertOneDocumentImpl;
 import com.energyter.app.quarkus.cpu.annotations.RecordCpuUsageUniAnnotation;
 import com.energyter.app.quarkus.memory.aspects.RecordMemoryUniAspect;
 import io.smallrye.mutiny.Uni;
+import org.bson.Document;
 import org.jboss.logging.Logger;
 
 import javax.annotation.Priority;
@@ -45,6 +48,7 @@ public class RecordCpuUsageUniAspect {
             Thread monitorThread = createMonitorThread(osMXBean, peakProcessCpuLoad, peakSystemCpuLoad, monitoring);
 
             Uni<?> result = (Uni<?>) context.proceed();
+            InsertOneDocument insertOneDocument = new InsertOneDocumentImpl();
 
             return result
                     .onSubscription().invoke(() -> {
@@ -79,6 +83,18 @@ public class RecordCpuUsageUniAspect {
                                 startSystemCpuLoad * 100,
                                 endSystemCpuLoad * 100,
                                 peakSystemCpuLoad.get() * 100);
+
+                        insertOneDocument.insertOne(new Document()
+                                .append("class", context.getTarget().getClass().getSimpleName())
+                                .append("method", context.getMethod().getName())
+                                .append("measure", "cpu")
+                                .append("CPUTime", cpuTimeMs)
+                                .append("startProcessCpuLoad", startProcessCpuLoad * 100)
+                                .append("endProcessCpuLoad", endProcessCpuLoad * 100)
+                                .append("peakProcessCpuLoad", peakProcessCpuLoad.get() * 10)
+                                .append("startSystemCpuLoad", startSystemCpuLoad * 100)
+                                .append("endSystemCpuLoad", endSystemCpuLoad * 100)
+                                .append("peakSystemCpuLoad", peakSystemCpuLoad.get() * 10));
                     });
         }
         return context.proceed();
